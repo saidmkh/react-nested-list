@@ -1,65 +1,94 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
-import { getUID, nestedSearcher } from './lib';
+import { getUID } from './lib';
 
 import ListItem from './ListItem';
 
-const List = ({ list, currentList, listId, setList }) => {
-  const [text, setText] = useState('');
+const List = ({ list }) => {
+  const [curList, setCurList] = useState([]);
+  const inputEl = useRef(null);
 
-  const hasSubList = list => list.subList && list.subList.length;
+  useEffect(() => {
+    setCurList(list);
+  }, [list]);
 
-  const handleRemove = () => listItemId => {
-    console.log('object');
+  const handleAddSubList = listItemId => () => {
+    const newArray = [...curList];
+    const foundedListItem = curList.find(item => item.id === listItemId);
+    const listItemIndex = curList.findIndex(item => item.id === listItemId);
+
+    foundedListItem.subList = [];
+    newArray[listItemIndex] = foundedListItem;
+
+    setCurList(newArray);
   };
 
-  const handleAddSubList = () => () => console.log('object');
+  const handleRemove = listItemId => () => {
+    const filteredList = curList.filter(item => item.id !== listItemId);
+
+    setCurList(filteredList);
+  };
+
+  const upListItem = listItemId => () => {
+    let newArray = [...curList];
+    let listItemIndex = curList.findIndex(item => item.id === listItemId);
+
+    const underItem = newArray[listItemIndex - 1];
+    const item = newArray[listItemIndex];
+
+    newArray[listItemIndex - 1] = item;
+    newArray[listItemIndex] = underItem;
+
+    setCurList(newArray);
+  };
+
+  const downListItem = listItemId => () => {
+    let newArray = [...curList];
+    let listItemIndex = curList.findIndex(item => item.id === listItemId);
+
+    const underItem = newArray[listItemIndex + 1];
+    const item = newArray[listItemIndex];
+
+    newArray[listItemIndex + 1] = item;
+    newArray[listItemIndex] = underItem;
+
+    setCurList(newArray);
+  };
 
   const onSubmit = event => {
     event.preventDefault();
 
-    const ListItem = {
+    const text = new FormData(event.currentTarget).get('text');
+
+    const listItem = {
       id: getUID(),
       text
     };
 
-    const newList = nestedSearcher(list, listId, ListItem);
-
-    setList([...newList]);
-
-    setText('');
+    setCurList([...curList, listItem]);
+    inputEl.current.value = '';
   };
 
   return (
     <>
-      {currentList.map((listItem, index) => {
-        console.log(listItem);
+      {curList.map((listItem, index) => {
         return (
           <ul key={listItem.id}>
             <ListItem
               listItem={listItem}
               index={index}
-              listLength={currentList.length}
+              listLength={curList.length}
               handleRemove={handleRemove}
               handleAddSubList={handleAddSubList}
+              upListItem={upListItem}
+              downListItem={downListItem}
             />
-            {hasSubList(listItem) && (
-              <List
-                currentList={listItem.subList}
-                list={list}
-                listId={listItem.id}
-                setList={setList}
-              />
-            )}
+            {listItem.subList && <List list={listItem.subList} />}
           </ul>
         );
       })}
       <form onSubmit={event => onSubmit(event)} className="input-block">
-        <input
-          required={true}
-          value={text}
-          onChange={event => setText(event.target.value)}
-        />
+        <input ref={inputEl} required={true} name="text" />
         <button>Add</button>
       </form>
     </>

@@ -5,17 +5,23 @@ const ListItem = ({
   index,
   listLength,
   handleRemove,
-  handleAddSubList
+  handleAddSubList,
+  upListItem,
+  downListItem
 }) => {
-  const { text, id } = listItem;
+  const { text, id, subList } = listItem;
 
   return (
     <li className="d-flex">
       <span>{text}</span>
-      {index > 0 ? <button>&uarr;</button> : null}
-      {index < listLength - 1 ? <button>&darr;</button> : null}
-      <button onClick={handleAddSubList()}>Add Sublist</button>
-      <button onClick={handleRemove()}>Remove</button>
+      {index > 0 ? <button onClick={upListItem(id)}>&uarr;</button> : null}
+      {index < listLength - 1 ? (
+        <button onClick={downListItem(id)}>&darr;</button>
+      ) : null}
+      {!listItem.subList && (
+        <button onClick={handleAddSubList(id)}>Add Sublist</button>
+      )}
+      <button onClick={handleRemove(id)}>Remove</button>
     </li>
   );
 };
