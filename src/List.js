@@ -23,7 +23,16 @@ const List = ({ list }) => {
     setCurList(newArray);
   };
 
-  const handleRemoveSubList = listItemId => () => {};
+  const handleRemoveSubList = listItemId => () => {
+    const newArray = [...curList];
+    const foundedListItem = curList.find(item => item.id === listItemId);
+    const listItemIndex = curList.findIndex(item => item.id === listItemId);
+
+    delete foundedListItem.subList;
+    newArray[listItemIndex] = foundedListItem;
+
+    setCurList(newArray);
+  };
 
   const handleRemove = listItemId => () => {
     const filteredList = curList.filter(item => item.id !== listItemId);
@@ -82,6 +91,7 @@ const List = ({ list }) => {
               listLength={curList.length}
               handleRemove={handleRemove}
               handleAddSubList={handleAddSubList}
+              handleRemoveSubList={handleRemoveSubList}
               upListItem={upListItem}
               downListItem={downListItem}
             />
