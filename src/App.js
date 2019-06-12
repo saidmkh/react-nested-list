@@ -10,7 +10,7 @@ const App = () => {
 
   useEffect(() => {
     setList(LIST);
-  }, [list]);
+  }, []);
 
   return (
     <div className="App">

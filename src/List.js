@@ -10,26 +10,22 @@ const List = ({ list }) => {
 
   useEffect(() => {
     setCurList(list);
-  }, [list]);
+  }, []);
 
   const handleAddSubList = listItemId => () => {
     const newArray = [...curList];
-    const foundedListItem = curList.find(item => item.id === listItemId);
     const listItemIndex = curList.findIndex(item => item.id === listItemId);
 
-    foundedListItem.subList = [];
-    newArray[listItemIndex] = foundedListItem;
+    newArray[listItemIndex].subList = [];
 
     setCurList(newArray);
   };
 
   const handleRemoveSubList = listItemId => () => {
     const newArray = [...curList];
-    const foundedListItem = curList.find(item => item.id === listItemId);
     const listItemIndex = curList.findIndex(item => item.id === listItemId);
 
-    delete foundedListItem.subList;
-    newArray[listItemIndex] = foundedListItem;
+    delete newArray[listItemIndex].subList;
 
     setCurList(newArray);
   };
@@ -45,9 +41,9 @@ const List = ({ list }) => {
     const listItemIndex = curList.findIndex(item => item.id === listItemId);
 
     const underItem = newArray[listItemIndex - 1];
-    const item = newArray[listItemIndex];
+    const currentItem = newArray[listItemIndex];
 
-    newArray[listItemIndex - 1] = item;
+    newArray[listItemIndex - 1] = currentItem;
     newArray[listItemIndex] = underItem;
 
     setCurList(newArray);
@@ -57,11 +53,11 @@ const List = ({ list }) => {
     const newArray = [...curList];
     const listItemIndex = curList.findIndex(item => item.id === listItemId);
 
-    const underItem = newArray[listItemIndex + 1];
-    const item = newArray[listItemIndex];
+    const upperItem = newArray[listItemIndex + 1];
+    const currentItem = newArray[listItemIndex];
 
-    newArray[listItemIndex + 1] = item;
-    newArray[listItemIndex] = underItem;
+    newArray[listItemIndex + 1] = currentItem;
+    newArray[listItemIndex] = upperItem;
 
     setCurList(newArray);
   };
