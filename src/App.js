@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './index.css';
 
-import { getUID } from './lib';
-
 import List from './List';
 
 const LIST = [];
