@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-import { getUID } from './lib';
+import getUID from '../../lib/getUID';
 
-import ListItem from './ListItem';
+import styles from './List.module.css';
+import ListItem from '../ListItem';
 
 const List = ({ list }) => {
   const [currentList, setCurrentList] = useState([]);
@@ -97,7 +98,7 @@ const List = ({ list }) => {
           </ul>
         );
       })}
-      <form onSubmit={event => onSubmit(event)} className="input-block">
+      <form onSubmit={event => onSubmit(event)} className={styles.form}>
         <input ref={inputEl} required={true} name="text" />
         <button>Add</button>
       </form>

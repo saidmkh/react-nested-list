@@ -1,4 +1,4 @@
-export const getUID = () => {
+const getUID = () => {
   return (
     Math.random()
       .toString(36)
@@ -12,3 +12,5 @@ export const getUID = () => {
       .substring(2, 10)
   );
 };
+
+export default getUID;

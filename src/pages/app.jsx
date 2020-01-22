@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import './index.css';
 
-import List from './List';
+import List from '../components/List';
 
 const LIST = [];
 
