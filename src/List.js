@@ -5,40 +5,43 @@ import { getUID } from './lib';
 import ListItem from './ListItem';
 
 const List = ({ list }) => {
-  const [curList, setCurList] = useState([]);
+  const [currentList, setCurrentList] = useState([]);
   const inputEl = useRef(null);
 
   useEffect(() => {
-    setCurList(list);
-  }, []);
+    setCurrentList(list);
+  }, [list]);
 
   const handleAddSubList = listItemId => () => {
-    const newArray = [...curList];
-    const listItemIndex = curList.findIndex(item => item.id === listItemId);
+    const newArray = [...currentList];
+    const listItemIndex = currentList.findIndex(({ id }) => id === listItemId);
 
     newArray[listItemIndex].subList = [];
 
-    setCurList(newArray);
+    setCurrentList(newArray);
   };
 
   const handleRemoveSubList = listItemId => () => {
-    const newArray = [...curList];
-    const listItemIndex = curList.findIndex(item => item.id === listItemId);
+    const newArray = [...currentList];
+    const listItemIndex = currentList.findIndex(({ id }) => id === listItemId);
 
     delete newArray[listItemIndex].subList;
 
-    setCurList(newArray);
+    setCurrentList(newArray);
   };
 
   const handleRemove = listItemId => () => {
-    const filteredList = curList.filter(item => item.id !== listItemId);
+    const newArray = [...currentList];
+    const foundedIndex = currentList.findIndex(({ id }) => id === listItemId);
 
-    setCurList(filteredList);
+    newArray.splice(foundedIndex, 1);
+
+    setCurrentList(newArray);
   };
 
   const upListItem = listItemId => () => {
-    const newArray = [...curList];
-    const listItemIndex = curList.findIndex(item => item.id === listItemId);
+    const newArray = [...currentList];
+    const listItemIndex = currentList.findIndex(({ id }) => id === listItemId);
 
     const underItem = newArray[listItemIndex - 1];
     const currentItem = newArray[listItemIndex];
@@ -46,12 +49,12 @@ const List = ({ list }) => {
     newArray[listItemIndex - 1] = currentItem;
     newArray[listItemIndex] = underItem;
 
-    setCurList(newArray);
+    setCurrentList(newArray);
   };
 
   const downListItem = listItemId => () => {
-    const newArray = [...curList];
-    const listItemIndex = curList.findIndex(item => item.id === listItemId);
+    const newArray = [...currentList];
+    const listItemIndex = currentList.findIndex(({ id }) => id === listItemId);
 
     const upperItem = newArray[listItemIndex + 1];
     const currentItem = newArray[listItemIndex];
@@ -59,32 +62,31 @@ const List = ({ list }) => {
     newArray[listItemIndex + 1] = currentItem;
     newArray[listItemIndex] = upperItem;
 
-    setCurList(newArray);
+    setCurrentList(newArray);
   };
 
   const onSubmit = event => {
     event.preventDefault();
 
     const text = new FormData(event.currentTarget).get('text');
-
     const listItem = {
       id: getUID(),
       text
     };
 
-    setCurList([...curList, listItem]);
+    setCurrentList([...currentList, listItem]);
     inputEl.current.value = '';
   };
 
   return (
     <>
-      {curList.map((listItem, index) => {
+      {currentList.map((listItem, index) => {
         return (
           <ul key={listItem.id}>
             <ListItem
               listItem={listItem}
               index={index}
-              listLength={curList.length}
+              listLength={currentList.length}
               handleRemove={handleRemove}
               handleAddSubList={handleAddSubList}
               handleRemoveSubList={handleRemoveSubList}
